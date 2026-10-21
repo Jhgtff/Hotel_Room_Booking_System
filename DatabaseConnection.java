@@ -52,8 +52,6 @@ public class DatabaseConnection {
                 + "payment_status VARCHAR(50) NOT NULL, "
                 + "payment_date DATE NOT NULL)");
         }
-
-        // Add the three example room records if they do not already exist.
         String sql = "INSERT INTO rooms (room_number, room_type, price) VALUES (?, ?, ?) "
                    + "ON DUPLICATE KEY UPDATE room_type=VALUES(room_type), price=VALUES(price)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
