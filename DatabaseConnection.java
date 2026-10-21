@@ -52,14 +52,6 @@ public class DatabaseConnection {
                 + "payment_status VARCHAR(50) NOT NULL, "
                 + "payment_date DATE NOT NULL)");
         }
-        String sql = "INSERT INTO rooms (room_number, room_type, price) VALUES (?, ?, ?) "
-                   + "ON DUPLICATE KEY UPDATE room_type=VALUES(room_type), price=VALUES(price)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            addRoom(ps, 101, "Single Room", 1000);
-            addRoom(ps, 102, "Deluxe Room", 2000);
-            addRoom(ps, 103, "Suite Room", 3000);
-        }
-    }
 
     private void addRoom(PreparedStatement ps, int number, String type, double price) throws SQLException {
         ps.setInt(1, number);
