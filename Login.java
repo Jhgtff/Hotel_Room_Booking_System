@@ -1,0 +1,91 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+class Login{
+    Login(){
+        JFrame f=new JFrame("Hotel Booking Login");
+
+        JLabel title=new JLabel("Hotel Booking Login");
+        title.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel us=new JLabel("Username");
+    JLabel pas=new JLabel("Password");
+
+        JTextField username=new JTextField(15);
+        JPasswordField password=new JPasswordField(15);
+
+        JButton btn=new JButton("Login");
+        JButton reg=new JButton("Register");
+
+        JPanel p=new JPanel(new GridBagLayout());
+        JPanel form=new JPanel(new GridLayout(3,2,10,10));
+
+        title.setFont(new Font("Arial",Font.BOLD,20));
+
+        form.add(us);
+        form.add(username);
+    form.add(pas);
+    form.add(password);
+    form.add(btn);
+    form.add(reg);
+
+        p.add(form);
+
+        f.setLayout(new BorderLayout(10,20));
+        f.add(title,BorderLayout.NORTH);
+        f.add(p,BorderLayout.CENTER);
+
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                try{
+                    Connection con=DatabaseConnection.getInstance().getConnection();
+                    String sql="SELECT *FROM users WHERE username=? AND password=?";
+                    PreparedStatement ps=con.prepareStatement(sql);
+
+                    ps.setString(1, username.getText());
+                    ps.setString(2, new String(password.getPassword()));
+
+            ResultSet rs=ps.executeQuery();
+
+                    if(rs.next()){
+                        JOptionPane.showMessageDialog(f, "Login Sucessfully!");
+                        f.dispose();
+
+                        new Dashboard(username.getText());
+
+                    }else{
+                        JOptionPane.showMessageDialog(f, "Invalid Username or Password");
+                    }
+
+                    rs.close();
+                    ps.close();
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(f, ex.getMessage());
+                }
+            }
+        });
+
+
+
+
+        reg.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                f.dispose();
+
+                new Register();
+            }
+        });
+
+
+        f.setSize(600,400);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setLocationRelativeTo(null);
+    f.setVisible(true);
+}
+
+    public static void main(String[] args){
+        new Login();
+    }
+}
